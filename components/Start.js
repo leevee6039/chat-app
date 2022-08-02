@@ -92,15 +92,15 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    // flexDirection: 'column',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   title: {
     fontSize: 45,
     fontWeight: '600',
     color: '#fff',
-    margin: '10%',
+    // margin: '10%',
   },
   box: {
     backgroundColor: '#fff',
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '44%',
     justifyContent: 'space-evenly',
-    margin: '10%',
+    // margin: '10%',
     // paddingVertical: 10,
   },
   input: {
@@ -126,13 +126,13 @@ const styles = StyleSheet.create({
     color: '#757083',
     fontSize: 16,
     fontWeight: '300',
-    alignItems: 'baseline',
+    // alignItems: 'baseline',
     // paddingVertical: 10,
   },
   colorContainer: {
     width: '88%',
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
     justifyContent: 'space-evenly',
     // paddingVertical: 10,
   },
