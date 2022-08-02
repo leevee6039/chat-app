@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Button,
   ImageBackground,
   Pressable,
   StyleSheet,
@@ -9,10 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import { TextInput } from 'react-native-paper';
 
 import BackgroungImage from '../assets/img/Background_Image.png';
-import avatarIcon from '../assets/svg/icon.svg';
 
 const colors = {
   black: '#090C08',
@@ -73,13 +70,6 @@ export default function Start(props) {
           >
             <Text style={styles.buttonText}>Start Chatting</Text>
           </Pressable>
-
-          {/* <Button
-            style={styles.button}
-            title="Start Chatting"
-            color="#757083"
-            onPress={() => props.navigation.navigate('Chat', { name, color })}
-          /> */}
         </View>
       </ImageBackground>
     </View>
@@ -100,7 +90,6 @@ const styles = StyleSheet.create({
     fontSize: 45,
     fontWeight: '600',
     color: '#fff',
-    // margin: '10%',
   },
   box: {
     backgroundColor: '#fff',
@@ -108,8 +97,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '44%',
     justifyContent: 'space-evenly',
-    // margin: '10%',
-    // paddingVertical: 10,
   },
   input: {
     height: 50,
@@ -120,21 +107,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     paddingHorizontal: 10,
-    // marginVertical: 10,
   },
   text: {
     color: '#757083',
     fontSize: 16,
     fontWeight: '300',
-    // alignItems: 'baseline',
-    // paddingVertical: 10,
   },
   colorContainer: {
     width: '88%',
     flexDirection: 'row',
-    // flexWrap: 'wrap',
     justifyContent: 'space-evenly',
-    // paddingVertical: 10,
   },
   colorButton: {
     width: 40,
@@ -146,7 +128,6 @@ const styles = StyleSheet.create({
     width: '88%',
     justifyContent: 'center',
     alignItems: 'center',
-    // marginVertical: 10,
   },
   buttonText: {
     fontSize: 16,
