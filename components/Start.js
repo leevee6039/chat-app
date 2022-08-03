@@ -7,6 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 
 import BackgroungImage from '../assets/img/Background_Image.png';
@@ -72,6 +74,10 @@ export default function Start(props) {
           </Pressable>
         </View>
       </ImageBackground>
+      {/* Avoid keyboard to overlap text messages on older Andriod versions */}
+      {Platform.OS === 'android' ? (
+        <KeyboardAvoidingView behavior="height" />
+      ) : null}
     </View>
   );
 }
