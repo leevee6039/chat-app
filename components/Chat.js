@@ -1,73 +1,86 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Platform, KeyboardAvoidingView } from 'react-native';
 import { Bubble, GiftedChat } from 'react-native-gifted-chat';
 
-export default function Chat(props) {
-  let { name, color } = props.route.params;
-  const [messages, setMessages] = useState([]);
+export default class Chat extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      messages: [],
+    };
+  }
 
-  // set the screen title to the user name enetred in the start screen
-  useEffect(() => {
-    props.navigation.setOptions({ title: name });
+  componentDidMount() {
+    // Set name as title chat
+    let { name } = this.props.route.params;
+    this.props.navigation.setOptions({ title: name });
 
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
+    this.setState({
+      messages: [
+        {
+          _id: 1,
+          text: 'Hello developer',
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'React Native',
+            avatar: 'https://placeimg.com/140/140/any',
+          },
         },
-      },
-      {
-        _id: 2,
-        text: `${name} has entered the chat.`,
-        createdAt: new Date(),
-        system: true,
-      },
-    ]);
-  }, []);
+        {
+          _id: 2,
+          text: `${name} has entered the chat.`,
+          createdAt: new Date(),
+          system: true,
+        },
+      ],
+    });
+  }
 
-  const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
-  }, []);
+  // Add message to the messages state
+  onSend(messages = []) {
+    this.setState((previousState) => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }));
+  }
 
   // Customize the color of the sender bubble
-  const renderBubble = (props) => {
+  renderBubble(props) {
     return (
       <Bubble
         {...props}
         wrapperStyle={{
+          left: {
+            backgroundColor: '#FFE5B4',
+          },
           right: {
-            backgroundColor: '#000',
+            backgroundColor: '#00abc0',
           },
         }}
       />
     );
-  };
+  }
 
-  return (
-    <>
-      <View style={[{ backgroundColor: color }, styles.container]}>
-        <GiftedChat
-          renderBubble={renderBubble.bind()}
-          messages={messages}
-          onSend={(messages) => onSend(messages)}
-          user={{
-            _id: 1,
-          }}
-        />
-        {/* Avoid keyboard to overlap text messages on older Andriod versions */}
-        {Platform.OS === 'android' ? (
-          <KeyboardAvoidingView behavior="height" />
-        ) : null}
-      </View>
-    </>
-  );
+  render() {
+    let { color } = this.props.route.params;
+
+    return (
+      <>
+        <View style={[{ backgroundColor: color }, styles.container]}>
+          <GiftedChat
+            renderBubble={this.renderBubble.bind(this)}
+            messages={this.state.messages}
+            onSend={(messages) => this.onSend(messages)}
+            user={{ _id: 1 }}
+          />
+          {/* Avoid keyboard to overlap text messages on older Andriod versions */}
+          {Platform.OS === 'android' ? (
+            <KeyboardAvoidingView behavior="height" />
+          ) : null}
+        </View>
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
