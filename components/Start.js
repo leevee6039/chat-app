@@ -83,6 +83,10 @@ export default class Start extends React.Component {
             </Pressable>
           </View>
         </ImageBackground>
+        {/* Avoid keyboard to overlap text messages on older Andriod versions */}
+        {Platform.OS === 'android' ? (
+          <KeyboardAvoidingView behavior="height" />
+        ) : null}
       </View>
     );
   }
