@@ -16,10 +16,8 @@ export default class Chat extends React.Component {
         name: '',
       },
     };
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
 
-    // Your web app's Firebase configuration
+    // Set up firebase
     const firebaseConfig = {
       apiKey: 'AIzaSyA_Gk-ctZGrnvVgFKY5D6YDbEP4WB7WAzU',
       authDomain: 'chatapp-e46eb.firebaseapp.com',
@@ -64,33 +62,10 @@ export default class Chat extends React.Component {
     let { name } = this.props.route.params;
     this.props.navigation.setOptions({ title: name });
 
-    this.setState({
-      messages: [
-        // {
-        //   _id: 1,
-        //   text: 'Hello developer',
-        //   createdAt: new Date(),
-        //   user: {
-        //     _id: 2,
-        //     name: 'React Native',
-        //     avatar: 'https://placeimg.com/140/140/any',
-        //   },
-        // },
-        // {
-        //   _id: 2,
-        //   text: `${name} has entered the chat.`,
-        //   createdAt: new Date(),
-        //   system: true,
-        // },
-      ],
-      uid: user.uid,
-      messages: [],
-      user: {
-        _id: user.uid,
-        name: name,
-      },
-    });
+    // Reference to load messages from Firebase
+    this.referenceChatMessages = firebase.firestore().collection('messages');
 
+    // Authenticate user anonymously
     this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         firebase.auth().signInAnonymously();
@@ -98,57 +73,46 @@ export default class Chat extends React.Component {
       this.setState({
         uid: user.uid,
         messages: [],
+        user: {
+          _id: user.uid,
+          name: name,
+        },
       });
       this.unsubscribe = this.referenceChatMessages
         .orderBy('createdAt', 'desc')
         .onSnapshot(this.onCollectionUpdate);
     });
-
-    // create a reference to the active user's documents (messages)
-    this.referenceChatMessages = firebase
-      .firestore()
-      .collection('messages')
-      .where('uid', '==', this.state.uid);
-
-    this.referenceChatMessages = firebase.firestore().collection('messages');
-    // this.unsubscribe = this.referenceChatMessages.onSnapshot(
-    //   this.onCollectionUpdate
-    // );
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  onCollectionUpdate = (querySnapshot) => {
-    const messages = [];
-    // go through each document
-    querySnapshot.forEach((doc) => {
-      // get the QueryDocumentSnapshot's data
-      let data = doc.data();
-      messages.push({
-        _id: data._id,
-        text: data.text,
-        createdAt: data.createdAt.toDate(),
-        user: {
-          _id: data.user._id,
-          name: data.user.name,
-        },
-      });
-    });
-    this.setState({
-      messages,
+  // Add message to the state
+  onSend(messages = []) {
+    this.setState(
+      (previousState) => ({
+        messages: GiftedChat.append(previousState.messages, messages),
+      }),
+      () => {
+        // Call addMessage with last message in message state
+        this.addMessages(this.state.messages[0]);
+      }
+    );
+  }
+
+  // Add message to Firestore
+  addMessages = (message) => {
+    this.referenceChatMessages.add({
+      uid: this.state.uid,
+      _id: message._id,
+      text: message.text,
+      createdAt: message.createdAt,
+      user: message.user,
     });
   };
 
-  // Add message to the messages state
-  onSend(messages = []) {
-    this.setState((previousState) => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
-  }
-
-  // Customize the color of the sender bubble
+  // Customize message bubbles
   renderBubble(props) {
     return (
       <Bubble
@@ -164,17 +128,6 @@ export default class Chat extends React.Component {
       />
     );
   }
-
-  // Add message to Firestore
-  addMessages = (message) => {
-    this.referenceChatMessages.add({
-      uid: this.state.uid,
-      _id: message._id,
-      text: message.text,
-      createdAt: message.createdAt,
-      user: message.user,
-    });
-  };
 
   render() {
     let { color, name } = this.props.route.params;
