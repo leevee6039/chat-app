@@ -140,6 +140,8 @@ export default class Chat extends React.Component {
           .orderBy('createdAt', 'desc')
           .onSnapshot(this.onCollectionUpdate);
       });
+      // this.deleteMessages();
+      // this.saveMessages();
     } else {
       this.getMessages();
     }
@@ -148,6 +150,7 @@ export default class Chat extends React.Component {
   componentWillUnmount() {
     if (this.isConnected) {
       this.unsubscribe();
+      this.authUnsubscribe();
     }
   }
 
