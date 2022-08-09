@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native';
 import { connectActionSheet } from '@expo/react-native-action-sheet';
-import * as Permissions from 'expo-permissions';
+// import * as Permissions from 'expo-permissions';
 
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
@@ -43,7 +43,7 @@ class CustomAction extends React.Component {
   // select image from library
   pickImage = async () => {
     // Ask for permission
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
     try {
       if (status === 'granted') {
         let result = await ImagePicker.launchImageLibraryAsync({
