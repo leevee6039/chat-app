@@ -21,6 +21,7 @@ export default class Chat extends React.Component {
         avatar: '',
       },
       isConnected: null,
+      image: null,
     };
 
     // Set up firebase

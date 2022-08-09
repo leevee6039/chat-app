@@ -1,17 +1,18 @@
-import React, { Component } from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native';
+import { connectActionSheet } from '@expo/react-native-action-sheet';
+import * as Permissions from 'expo-permissions';
 
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import firebase from 'firebase';
 import 'firebase/firestore';
 
-export default class CustomActions extends Component {
-  // upload images to firebase
+class CustomAction extends React.Component {
+  // Upload images to firebase
   uploadImageFetch = async (uri) => {
     const blob = await new Promise((resolve, reject) => {
-      // create a new XMLHttpRequest
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
         resolve(xhr.response);
@@ -42,7 +43,7 @@ export default class CustomActions extends Component {
   // select image from library
   pickImage = async () => {
     // Ask for permission
-    const { status } = await ImagePicker.getMediaLibraryPermissionsAsync();
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     try {
       if (status === 'granted') {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -121,7 +122,8 @@ export default class CustomActions extends Component {
       'Cancel',
     ];
     const cancelButtonIndex = options.length - 1;
-    this.context.actionSheet().showActionSheetWithOptions(
+
+    this.props.showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
@@ -185,6 +187,10 @@ const styles = StyleSheet.create({
   },
 });
 
-CustomActions.contextTypes = {
+CustomAction.contextTypes = {
   actionSheet: PropTypes.func,
 };
+
+const CustomActions = connectActionSheet(CustomAction);
+
+export default CustomActions;
